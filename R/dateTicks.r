@@ -108,8 +108,8 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
 test <- function(){
 
 
-  print(nice_step_size(0,3,3))
-  print(nice_step_size(0,3,30))
+  print(nice_step_size(3,3))
+  print(nice_step_size(3,30))
 
   print(nice_monthly_step_size(6,3))
   print(nice_monthly_step_size(0.2,3))
@@ -118,17 +118,24 @@ test <- function(){
 
   s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=160)
   print(monthly_ticks(s1,3))
-  print(weekly_ticks(s1, 0,3)$majors)
-  print(weekly_ticks(s1, 3,3)$majors)
+  print(weekly_ticks(s1, 0,3))
+  print(weekly_ticks(s1, 3,3))
+  print(date_ticks(s1,3,0))
+  print(date_ticks(s1,3,1))
 
-  s1 <- seq(ISOdate(2019, 12,1), by="day", length.out=300)
-  print(weekly_ticks(s1, 0,3)$majors)
-  print(weekly_ticks(s1, 3,3)$majors)
+  s1 <- seq(ISOdate(2019, 12,1), by="day", length.out=30)
+  print(weekly_ticks(s1, 0,3))
+  print(weekly_ticks(s1, 3,3))
+  print(date_ticks(s1,3,0))
+  print(date_ticks(s1,3,1))
+
 
 
   s1 <- seq(ISOdate(2020, 4,1), by="month", length.out=160)
-  print(weekly_ticks(s1, 0,3)$majors)
-  print(weekly_ticks(s1, 0,10)$majors)
+  print(weekly_ticks(s1, 0,3))
+  print(weekly_ticks(s1, 0,10))
+  print(date_ticks(s1,3,0))
+  print(date_ticks(s1,3,1))
 
 
 }
