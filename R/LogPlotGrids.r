@@ -75,24 +75,24 @@ addGrid <- function (p, MinorLines=TRUE) {
       } else if (p$x.scales$at[1])   {
         lattice::panel.abline(v = p$x.scales$at, alpha = 0.15)
       } else {
-        print("using default grid x")
+        #print("using default grid x")
         lattice::panel.grid(v = -1)
       }
 
       if (p$y.scales$log == 10) {
         ticks <- log_ticks(p$y.limits)
-        print("ticks y:")
-        print(ticks)
+        #print("ticks y:")
+        #print(ticks)
         lattice::panel.abline(h = ticks$majors, alpha = 0.15)
         lattice::panel.grid(h=0, v=0)
         if (MinorLines){
           lattice::panel.abline(h = ticks$minors, alpha = 0.08)
         }
       } else if (p$y.scales$at[1]) {
-        print(p$y.scales$at)
+        #print(p$y.scales$at)
         lattice::panel.abline(h = p$y.scales$at, alpha = 0.15)
       } else {
-        print("using default grid y")
+        #print("using default grid y")
         lattice::panel.grid(h = -1)
       }
       lattice::panel.xyplot(x, y,  ...)
