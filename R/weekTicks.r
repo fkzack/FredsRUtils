@@ -56,6 +56,10 @@ test <- function(){
   print(weekly_ticks(s1, 0,3)$majors)
   print(weekly_ticks(s1, 3,3)$majors)
 
+  s1 <- seq(ISOdate(2019, 12,1), by="day", length.out=300)
+  print(weekly_ticks(s1, 0,3)$majors)
+  print(weekly_ticks(s1, 3,3)$majors)
+
 
   s1 <- seq(ISOdate(2020, 4,1), by="month", length.out=160)
   print(weekly_ticks(s1, 0,3)$majors)
