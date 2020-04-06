@@ -135,9 +135,9 @@ monthly_ticks <- function(x, numIntervals = 3){
 date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   range <- as.numeric(max(x) - min(x))
   rough_tick <- range/numIntervals #days
-  if (rough_tick < 10){
+  if (rough_tick < 4){
     ticks <- daily_ticks(x,numIntervals)
-  } else if (rough_tick < 45){
+  } else if (rough_tick < 40)
     ticks <- weekly_ticks(x, numIntervals,weekStartDay)
   } else {
     ticks <- monthly_ticks(x, numIntervals)
