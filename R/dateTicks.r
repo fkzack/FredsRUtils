@@ -39,22 +39,22 @@ nice_monthly_step_size <- function(months, numSteps){
 #' dayOfWeek, the day to tick on (0 = sunday)
 #' numIntervals, the approximate number of intervals between tick marks
 #' @export
-weekly_ticks <- function(x, dayOfWeek, numIntervals = 3){
+weekly_ticks <- function(x, numIntervals = 3, dayOfWeek=0 ){
 
 
   #get the start and end dayOfWeeks
-  minDate <- as.Date(min(x))
+  minDate <- as.Date(min(x), tz="")
   leftMargin <- (as.POSIXlt(minDate)$wday - dayOfWeek)%%7
   minDate <- minDate - lubridate::days(leftMargin)
 
-  maxDate <- as.Date(max(x))
+  maxDate <- as.Date(max(x), tz="")
   rightMargin <- (dayOfWeek - as.POSIXlt(maxDate)$wday)%%7
   maxDate <- maxDate + lubridate::days(rightMargin)
 
   weeks <- as.numeric(difftime(maxDate, minDate, units="weeks"))
   if (weeks < 1){
     maxDate <- minDate + lubridate::days(7)
-    weeks <= 1
+    weeks <- 1
   }
 
   numIntervals <- max(numIntervals, 2)
@@ -74,15 +74,22 @@ monthly_ticks <- function(x, numIntervals = 3){
 
   numIntervals = max(1, numIntervals)
 
-  minDate <- as.Date(min(x))
+  minDate <- as.Date(min(x), tz="")
   y = as.POSIXlt(minDate)$year + 1900
   m = as.POSIXlt(minDate)$mon + 1
-  minDate <- ISOdate(y,m,1)
+  minDate <- ISOdate(y,m,1, tz="")
 
-  maxDate <- as.Date(max(x))
+  maxDate <- as.Date(max(x), tz="")
   y = as.POSIXlt(maxDate)$year + 1900
-  m = as.POSIXlt(maxDate)$mon + 2
-  maxDate <- ISOdate(y,m,1)
+  m = as.POSIXlt(maxDate)$mon + 1
+  #need to handle through end of day on maxDate
+  if (m==12){
+    y <- y+1
+    m <- 1
+  } else {
+    m <- m+1
+  }
+  maxDate <- ISOdate(y,m,1, tz="")
 
   approx_months <- ceiling(as.numeric(maxDate-minDate)/30)
 
@@ -103,11 +110,11 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   if (rough_tick < 7){
     ticks <- lubridate::pretty_dates(x, numIntervals)
   } else if (rough_tick < 30){
-    ticks <- weekly_ticks(x,weekStartDay, numIntervals)
+    ticks <- weekly_ticks(x, numIntervals,weekStartDay)
   } else {
     ticks <- monthly_ticks(x, numIntervals)
   }
-  return (as.Date(ticks))
+  return (as.POSIXct(ticks, tz=""))
 }
 
 test <- function(){
@@ -121,15 +128,18 @@ test <- function(){
   print(nice_monthly_step_size(1300,12))
 
 
-  s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=160)
+  s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
+  print(paste(min(s1), "...", max(s1)))
   print(monthly_ticks(s1,3))
-  print(weekly_ticks(s1, 0,3))
+  print(weekly_ticks(s1, 3,0))
   print(weekly_ticks(s1, 3,3))
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
   s1 <- seq(ISOdate(2019, 12,1), by="day", length.out=30)
-  print(weekly_ticks(s1, 0,3))
+  print(paste(min(s1), "...", max(s1)))
+  print(monthly_ticks(s1,3))
+  print(weekly_ticks(s1, 3,0))
   print(weekly_ticks(s1, 3,3))
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
@@ -137,11 +147,19 @@ test <- function(){
 
 
   s1 <- seq(ISOdate(2020, 4,1), by="month", length.out=160)
-  print(weekly_ticks(s1, 0,3))
-  print(weekly_ticks(s1, 0,10))
+  print(paste(min(s1), "...", max(s1)))
+  print(monthly_ticks(s1,3))
+  print(weekly_ticks(s1, 3,0))
+  print(weekly_ticks(s1, 3,3))
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
 
 }
+
+s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
+weekly_ticks(s1, 3)
+monthly_ticks(s1,3)
+date_ticks(s1,3,0)
+
 
