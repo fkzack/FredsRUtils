@@ -3,6 +3,7 @@
 export(PresidentPlot)
 export(Presidents)
 export(addGrid)
+export(daily_ticks)
 export(date_ticks)
 export(log_ticks)
 export(monthly_ticks)

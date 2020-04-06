@@ -34,6 +34,34 @@ nice_monthly_step_size <- function(months, numSteps){
   return (nice_step)
 }
 
+#' Calculate daily tick marks
+#' x, the data range to consider
+#' numIntervals, the approximate number of intervals between tick marks
+#' @export
+daily_ticks <- function(x, numIntervals = 3 ){
+
+
+  #get the start and end dayOfWeeks
+  minDate <- as.Date(min(x), tz="")
+
+  maxDate <- as.Date(max(x), tz="")
+  maxDate <- maxDate + lubridate::days(1)
+
+  days  <- as.numeric(difftime(maxDate, minDate, units="days"))
+  if (days < 1){
+    maxDate <- minDate + lubridate::days(1)
+    days <- 1
+  }
+
+  numIntervals <- max(numIntervals, 2)
+
+  nice_step = ceiling(nice_step_size(days, numIntervals))
+  ticks <- seq(minDate, maxDate, by = nice_step)
+  return(ticks)
+}
+
+
+
 #' Calculate weekly tick marks
 #' x, the data range to consider
 #' dayOfWeek, the day to tick on (0 = sunday)
@@ -107,9 +135,9 @@ monthly_ticks <- function(x, numIntervals = 3){
 date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   range <- as.numeric(max(x) - min(x))
   rough_tick <- range/numIntervals #days
-  if (rough_tick < 7){
-    ticks <- lubridate::pretty_dates(x, numIntervals)
-  } else if (rough_tick < 30){
+  if (rough_tick < 10){
+    ticks <- daily_ticks(x,numIntervals)
+  } else if (rough_tick < 45){
     ticks <- weekly_ticks(x, numIntervals,weekStartDay)
   } else {
     ticks <- monthly_ticks(x, numIntervals)
