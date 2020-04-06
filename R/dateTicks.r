@@ -5,10 +5,12 @@
 nice_step_size <- function(range, numSteps){
   rough_step <- range/numSteps
   mag <- floor(log10(rough_step))
-  scaled_step <-  rough_step/(10^mag) # in range 1:10
+  scaled_step <-  ceiling(rough_step/(10^mag)) # in range 1:10
   if (scaled_step > 5){
     nice_step <- 10
   } else if (scaled_step > 2) {
+    nice_step <- 5
+  } else if (scaled_step >1){
     nice_step <- 2
   } else {
     nice_step <- 1
@@ -70,6 +72,8 @@ monthly_ticks <- function(x, numIntervals = 3){
   #x <-seq(ISOdate(2020, 4,1), by="day", length.out=5)
   #numIntervals <- 10
 
+  numIntervals = max(1, numIntervals)
+
   minDate <- as.Date(min(x))
   y = as.POSIXlt(minDate)$year + 1900
   m = as.POSIXlt(minDate)$mon + 1
@@ -94,7 +98,8 @@ monthly_ticks <- function(x, numIntervals = 3){
 #' numIntervals, the approximate number of intervals between tick marks
 #' @export
 date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
-  rough_tick <- (max(x) - min(x))/numIntervals #days
+  range <- as.numeric(max(x) - min(x))
+  rough_tick <- range/numIntervals #days
   if (rough_tick < 7){
     ticks <- lubridate::pretty_dates(x, numIntervals)
   } else if (rough_tick < 30){
@@ -139,3 +144,4 @@ test <- function(){
 
 
 }
+

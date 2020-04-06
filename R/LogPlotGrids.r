@@ -14,30 +14,30 @@
 #' @export
 log_ticks <- function(log_range){
 
-  cat("log_ticks from", log_range[1], "to", log_range[2], "\n")
+  #cat("log_ticks from", log_range[1], "to", log_range[2], "\n")
 
   #locate major ticks as range of integer powers of 10 inside data limits
   lowest <- ceiling(log_range[1])
   highest <- floor(log_range[2])
   step <- 1
 
-  cat("lowest", lowest, ", highest", highest, ", step", step, "\n")
+  #cat("lowest", lowest, ", highest", highest, ", step", step, "\n")
 
   #majors are the log value of the major ticks
   majors <- seq(lowest, highest, step)
-  cat("majors (actual plotted value):", majors, "\n")
-  cat("10^majors (value as labeled on axis):", 10^majors, "\n")
+  #cat("majors (actual plotted value):", majors, "\n")
+  #cat("10^majors (value as labeled on axis):", 10^majors, "\n")
 
   #minor ticks can go outside data limits, but no further than next decade
   lowest <- floor(log_range[1])
   highest <- ceiling(log_range[2])
   minor_limits <- seq(lowest, highest, step)
-  cat("minor limits (actual plotted value):", minor_limits,"\n")
+  #cat("minor limits (actual plotted value):", minor_limits,"\n")
 
   #minor grid lines are at 2x, 3x,.. 9x each power of 10
   minors <- log10(seq(2,9) %o% 10^minor_limits)
-  cat("minors:", minors, "\n")
-  cat("10^minors  (value as labeled on axis):", 10^minors, "\n")
+  #cat("minors:", minors, "\n")
+  #cat("10^minors  (value as labeled on axis):", 10^minors, "\n")
   return (list(majors=majors, minors=minors))
 }
 
@@ -61,7 +61,7 @@ addGrid <- function (p, MinorLines=TRUE) {
     p,
     panel = function(x, y, ...) {
       #data limits in log coordinates
-      cat("limits", p$y.limits, "\n")
+      #cat("limits", p$y.limits, "\n")
       #cat("x", x, "\n")
       #cat("y", y, "\n")
 
@@ -257,4 +257,4 @@ testLogPlotGrids <- function(){
 
 }
 
-testLogPlotGrids()
+# testLogPlotGrids()
