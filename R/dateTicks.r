@@ -142,7 +142,15 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   } else {
     ticks <- monthly_ticks(x, numIntervals)
   }
-  return (as.POSIXct(ticks, tz=""))
+
+  #try to return the same class as supplied since differences confuse xyplot
+  if (class(x)[1] == "POSIXct"){
+    return (as.POSIXct(ticks, tz=""))
+  } else if (class(x)[1] == "Date"){
+    return (as.Date(ticks))
+  } else {
+    return (ticks)
+  }
 }
 
 test <- function(){
