@@ -137,7 +137,7 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   rough_tick <- range/numIntervals #days
   if (rough_tick < 4){
     ticks <- daily_ticks(x,numIntervals)
-  } else if (rough_tick < 40)
+  } else if (rough_tick < 40){
     ticks <- weekly_ticks(x, numIntervals,weekStartDay)
   } else {
     ticks <- monthly_ticks(x, numIntervals)
@@ -152,6 +152,7 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
     return (ticks)
   }
 }
+
 
 test <- function(){
 
