@@ -42,9 +42,9 @@ daily_ticks <- function(x, numIntervals = 3 ){
 
 
   #get the start and end dayOfWeeks
-  minDate <- as.Date(min(x), tz="")
+  minDate <- as.Date(min(x, na.rm = T), tz="")
 
-  maxDate <- as.Date(max(x), tz="")
+  maxDate <- as.Date(max(x, na.rm = T), tz="")
   maxDate <- maxDate + lubridate::days(1)
 
   days  <- as.numeric(difftime(maxDate, minDate, units="days"))
@@ -71,11 +71,11 @@ weekly_ticks <- function(x, numIntervals = 3, dayOfWeek=0 ){
 
 
   #get the start and end dayOfWeeks
-  minDate <- as.Date(min(x), tz="")
+  minDate <- as.Date(min(x, na.rm = T), tz="")
   leftMargin <- (as.POSIXlt(minDate)$wday - dayOfWeek)%%7
   minDate <- minDate - lubridate::days(leftMargin)
 
-  maxDate <- as.Date(max(x), tz="")
+  maxDate <- as.Date(max(x, na.rm = T), tz="")
   rightMargin <- (dayOfWeek - as.POSIXlt(maxDate)$wday)%%7
   maxDate <- maxDate + lubridate::days(rightMargin)
 
@@ -102,12 +102,12 @@ monthly_ticks <- function(x, numIntervals = 3){
 
   numIntervals = max(1, numIntervals)
 
-  minDate <- as.Date(min(x), tz="")
+  minDate <- as.Date(min(x, na.rm = T), tz="")
   y = as.POSIXlt(minDate)$year + 1900
   m = as.POSIXlt(minDate)$mon + 1
   minDate <- ISOdate(y,m,1, tz="")
 
-  maxDate <- as.Date(max(x), tz="")
+  maxDate <- as.Date(max(x, na.rm = T), tz="")
   y = as.POSIXlt(maxDate)$year + 1900
   m = as.POSIXlt(maxDate)$mon + 1
   #need to handle through end of day on maxDate
@@ -133,7 +133,7 @@ monthly_ticks <- function(x, numIntervals = 3){
 #' numIntervals, the approximate number of intervals between tick marks
 #' @export
 date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
-  range <- as.numeric(max(x) - min(x))
+  range <- as.numeric(max(x, na.rm = T) - min(x, na.rm = T))
   rough_tick <- range/numIntervals #days
   if (rough_tick < 4){
     ticks <- daily_ticks(x,numIntervals)
@@ -191,12 +191,13 @@ test <- function(){
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
+  s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
+  weekly_ticks(s1, 3)
+  monthly_ticks(s1,3)
+  date_ticks(s1,3,0)
+
 
 }
 
-s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
-weekly_ticks(s1, 3)
-monthly_ticks(s1,3)
-date_ticks(s1,3,0)
 
 
