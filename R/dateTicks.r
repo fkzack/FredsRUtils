@@ -23,6 +23,18 @@ nice_step_size <- function(range, numSteps){
   return (nice_step)
 }
 
+#' return a linear sequence including all data in x with approximately numIntervals
+#' @export
+linear_ticks <- function(x, numIntervals=3){
+  xmin <- min(x, na.rm = T)
+  xmax <- max(x, na.rm = T)
+  step <- nice_step_size(xmax-xmin, numIntervals)
+  xmin <- step * floor(xmin/step)
+  xmax <- step * ceiling(xmax/step)
+  ticksAt <- seq(xmin, xmax, by=step)
+  return(ticksAt)
+}
+
 # Get nice (multiples of 6,4,3,2,or 1 month) step sizes
 nice_monthly_step_size <- function(months, numSteps){
 
@@ -194,10 +206,10 @@ test <- function(){
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
-  s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
-  weekly_ticks(s1, 3)
-  monthly_ticks(s1,3)
-  date_ticks(s1,3,0)
+
+  s2 <- seq(-107.3, by= 8.7, length.out = 100)
+  print(linear_ticks(s2,3))
+  print (linear_ticks(s2, 20))
 
 
 }
