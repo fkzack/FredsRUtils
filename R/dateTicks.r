@@ -1,7 +1,10 @@
 #calc nice tick locations for date axis
 
 
-# Get step sizes that are  a nice multiple of 1, 2, 5, or 10
+#' Get step sizes that are  a nice multiple of 1, 2, 5, or 10
+#' range is max - min
+#' numSteps is the approximate number of steps desired in range
+#' @export
 nice_step_size <- function(range, numSteps){
   rough_step <- range/numSteps
   mag <- floor(log10(rough_step))
