@@ -12,9 +12,9 @@
 #' returns a list of major tick locations and minor tick locations,
 #' $majors and $minors
 #' @export
-log_ticks <- function(log_range){
+log_ticks_old <- function(log_range){
 
-  #cat("log_ticks from", log_range[1], "to", log_range[2], "\n")
+  #cat("log_ticks_old from", log_range[1], "to", log_range[2], "\n")
 
   #locate major ticks as range of integer powers of 10 inside data limits
   lowest <- ceiling(log_range[1])
@@ -66,7 +66,7 @@ addGrid <- function (p, MinorLines=TRUE) {
       #cat("y", y, "\n")
 
       if (p$x.scales$log == 10) {
-        ticks <- log_ticks(p$x.limits)
+        ticks <- log_ticks_old(p$x.limits)
         lattice::panel.abline(v = ticks$majors, alpha = 0.15)
         lattice::panel.grid(v=0)
         if (MinorLines) {
@@ -80,7 +80,7 @@ addGrid <- function (p, MinorLines=TRUE) {
       }
 
       if (p$y.scales$log == 10) {
-        ticks <- log_ticks(p$y.limits)
+        ticks <- log_ticks_old(p$y.limits)
         #print("ticks y:")
         #print(ticks)
         lattice::panel.abline(h = ticks$majors, alpha = 0.15)
@@ -108,7 +108,7 @@ addGrid <- function (p, MinorLines=TRUE) {
 #     #cat("y", y, "\n")
 #
 #     if (p$x.scales$log == 10) {
-#       ticks <- log_ticks(p$x.limits)
+#       ticks <- log_ticks_old(p$x.limits)
 #       p <- p +
 #         panel.abline(v = ticks$majors, alpha = 0.15)
 #         panel.abline(v = ticks$minors, alpha = 0.08)
@@ -120,7 +120,7 @@ addGrid <- function (p, MinorLines=TRUE) {
 #     }
 #
 #     if (p$y.scales$log == 10) {
-#       ticks <- log_ticks(p$y.limits)
+#       ticks <- log_ticks_old(p$y.limits)
 #       p <- p +
 #         panel.abline(h = ticks$majors, alpha = 0.15)
 #         panel.abline(h = ticks$minors, alpha = 0.08)

@@ -72,7 +72,7 @@ daily_ticks <- function(x, numIntervals = 3 ){
 
   nice_step = ceiling(nice_step_size(days, numIntervals))
   ticks <- seq(minDate, maxDate, by = nice_step)
-  return(ticks)
+  return(fixTickClass(x, ticks))
 }
 
 
@@ -104,7 +104,7 @@ weekly_ticks <- function(x, numIntervals = 3, dayOfWeek=0 ){
 
   nice_step = ceiling(nice_step_size(weeks, numIntervals))
   ticks <- seq(minDate, maxDate, by = nice_step * 7)
-  return(ticks)
+  return(fixTickClass(x,ticks))
 }
 
 #' Calculate monthly tick marks
@@ -139,7 +139,7 @@ monthly_ticks <- function(x, numIntervals = 3){
   nice_steps <- nice_monthly_step_size(approx_months, numIntervals)
   ticks <- seq(minDate, maxDate, by=sprintf("%d months", nice_steps))
 
-  return (ticks)
+  return (fixTickClass(x, ticks))
 }
 
 #' Calculate tick marks for a date axis
@@ -157,8 +157,16 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
   } else {
     ticks <- monthly_ticks(x, numIntervals)
   }
+ return(ticks)
+}
 
-  #try to return the same class as supplied since differences confuse xyplot
+
+#try to return the same class as supplied since differences confuse xyplot
+#x is the original date or posixct or ??? value
+#ticks are the ticks generated from that input
+#returns ticks matched to input class
+fixTickClass <- function (x, ticks){
+
   if (class(x)[1] == "POSIXct"){
     return (as.POSIXct(ticks, tz=""))
   } else if (class(x)[1] == "Date"){
@@ -167,6 +175,84 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
     return (ticks)
   }
 }
+
+#' Calcualte ticks for one axis of a log plot
+#' x is the data to fit, in linear coordiantes
+#' base is the log base to use, typically 2 or 10 or powers therof
+#' returns a list of
+#'    ticksAt (tick location in original coordinates),
+#'    majors (major grid lines in log coordinates)
+#'    minors (minor grid lines in log coordinates)
+#'
+#'minors will be null if base is not a power of 10
+#' @export
+log_ticks <- function(x, base=10){
+
+  step <- 1
+
+  #locate major ticks as range of integer powers of base inside data limits
+  lowest <- ceiling(min(log(x, base=base), na.rm = TRUE))
+  highest <- floor(max(log(x, base=base), na.rm = TRUE))
+  if (highest - lowest < 1) {
+    highest = lowest + 1
+    lowest = lowest -1
+  }
+
+
+  #majors are the log value of the major ticks
+  majors <- seq(lowest, highest, step)
+  #cat("majors (actual plotted value):", majors, "\n")
+  #cat(base)
+  #cat(^majors (value as labeled on axis):", base^majors, "\n")
+
+  #minor ticks can go outside data limits, but no further than next power
+  lowest <- floor(min(log(x, base=base), na.rm = TRUE))
+  highest <- ceiling(max(log(x, base=base), na.rm = TRUE))
+  minor_limits <- seq(lowest, highest, step)
+
+  if (base%%10 ==0) {
+    subcycle <-  seq(2*base/10, base-1, by=base/10)
+    minors <- log(subcycle %o% base^minor_limits, base = base)
+  }
+  else {
+    minors <- NULL
+  }
+
+
+  return (list(majors=as.vector(majors), minors=as.vector(minors)))
+}
+
+testTicks <- function(){
+  x <- 10 ^ seq(-10,10)
+  print(x)
+  print("")
+  print("log 10 ticks")
+  t <- log_ticks(x)
+  print(t)
+  print(10^t$minors)
+
+  print("")
+  print("log 100 ticks")
+  t <- log_ticks(x, base=100)
+  print(t)
+  print(100^t$minors)
+
+
+  print("")
+  print("log 2 ticks")
+  t <- log_ticks(x, base=2)
+  print(t)
+
+  print("")
+  print("log 16 ticks")
+  t <- log_ticks(x, base=16)
+  print(t)
+  print(16^t$majors)
+
+}
+testTicks()
+
+
 
 
 test <- function(){
