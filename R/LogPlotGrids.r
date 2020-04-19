@@ -11,7 +11,6 @@
 #' Calculate tick locations that will work nicely with log 10 grids
 #' returns a list of major tick locations and minor tick locations,
 #' $majors and $minors
-#' @export
 log_ticks_old <- function(log_range){
 
   #cat("log_ticks_old from", log_range[1], "to", log_range[2], "\n")
