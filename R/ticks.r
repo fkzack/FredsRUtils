@@ -168,9 +168,9 @@ date_ticks <- function(x, numIntervals = 3, weekStartDay = 0){
 fixTickClass <- function (x, ticks){
 
   if (class(x)[1] == "POSIXct"){
-    return (as.POSIXct(ticks, tz=""))
+    return (as.POSIXct(as.character(ticks), tz=""))
   } else if (class(x)[1] == "Date"){
-    return (as.Date(ticks))
+    return (as.Date(ticks, tz=""))
   } else {
     return (ticks)
   }
@@ -266,7 +266,7 @@ test <- function(){
   print(nice_monthly_step_size(1300,12))
 
 
-  s1 <- seq(ISOdate(2020, 4,1), by="hour", length.out=10)
+  s1 <- seq(ISOdate(2020, 4,1, tz=""), by="hour", length.out=10)
   print(paste(min(s1), "...", max(s1)))
   print(monthly_ticks(s1,3))
   print(weekly_ticks(s1, 3,0))
@@ -274,7 +274,7 @@ test <- function(){
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
-  s1 <- seq(ISOdate(2019, 12,1), by="day", length.out=30)
+  s1 <- seq(ISOdate(2019, 12,1, tz=""), by="day", length.out=30)
   print(paste(min(s1), "...", max(s1)))
   print(monthly_ticks(s1,3))
   print(weekly_ticks(s1, 3,0))
@@ -284,7 +284,7 @@ test <- function(){
 
 
 
-  s1 <- seq(ISOdate(2020, 4,1), by="month", length.out=160)
+  s1 <- seq(ISOdate(2020, 4,1, tz=""), by="month", length.out=160)
   print(paste(min(s1), "...", max(s1)))
   print(monthly_ticks(s1,3))
   print(weekly_ticks(s1, 3,0))
