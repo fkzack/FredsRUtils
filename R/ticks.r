@@ -32,7 +32,9 @@ linear_ticks <- function(x, numIntervals=3){
   xmin <- step * floor(xmin/step)
   xmax <- step * ceiling(xmax/step)
   ticksAt <- seq(xmin, xmax, by=step)
-  return(ticksAt)
+  return (list(majors=as.vector(ticksAt), minors=NULL))
+
+
 }
 
 # Get nice (multiples of 6,4,3,2,or 1 month) step sizes
@@ -72,7 +74,9 @@ daily_ticks <- function(x, numIntervals = 3 ){
 
   nice_step = ceiling(nice_step_size(days, numIntervals))
   ticks <- seq(minDate, maxDate, by = nice_step)
-  return(fixTickClass(x, ticks))
+  majors <- fixTickClass(x, ticks)
+  minors <- NULL
+  return (list(majors=as.vector(majors), minors=as.vector(minors)))
 }
 
 
@@ -104,7 +108,14 @@ weekly_ticks <- function(x, numIntervals = 3, dayOfWeek=0 ){
 
   nice_step = ceiling(nice_step_size(weeks, numIntervals))
   ticks <- seq(minDate, maxDate, by = nice_step * 7)
-  return(fixTickClass(x,ticks))
+  majors <- fixTickClass(x,ticks)
+  if (nice_step < 2){
+    minors=NULL
+  } else {
+    minors = fixTickClass(x, seq(minDate, maxDate, by=7))
+  }
+
+  return (list(majors=as.vector(majors), minors=as.vector(minors)))
 }
 
 #' Calculate monthly tick marks
@@ -139,7 +150,9 @@ monthly_ticks <- function(x, numIntervals = 3){
   nice_steps <- nice_monthly_step_size(approx_months, numIntervals)
   ticks <- seq(minDate, maxDate, by=sprintf("%d months", nice_steps))
 
-  return (fixTickClass(x, ticks))
+  majors <- fixTickClass(x, ticks)
+  minors <- NULL
+  return (list(majors=as.vector(majors), minors=as.vector(minors)))
 }
 
 #' Calculate tick marks for a date axis
