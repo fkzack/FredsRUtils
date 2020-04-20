@@ -190,6 +190,9 @@ log_ticks <- function(x, base=10){
 
   step <- 1
 
+  #we can't display 0 or negative, so ignore them when scaling
+  x <- subset(x, x> 0)
+
   #locate major ticks as range of integer powers of base inside data limits
   lowest <- ceiling(min(log(x, base=base), na.rm = TRUE))
   highest <- floor(max(log(x, base=base), na.rm = TRUE))
@@ -274,7 +277,7 @@ test <- function(){
   print(date_ticks(s1,3,0))
   print(date_ticks(s1,3,1))
 
-  s1 <- seq(ISOdate(2019, 12,1, tz=""), by="day", length.out=30)
+  s1 <- seq(ISOdate(2020, 4,1, tz=""), by="day", length.out=30)
   print(paste(min(s1), "...", max(s1)))
   print(monthly_ticks(s1,3))
   print(weekly_ticks(s1, 3,0))
