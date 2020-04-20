@@ -32,7 +32,7 @@ linear_ticks <- function(x, numIntervals=3){
   xmin <- step * floor(xmin/step)
   xmax <- step * ceiling(xmax/step)
   ticksAt <- seq(xmin, xmax, by=step)
-  return (list(majors=as.vector(ticksAt), minors=NULL))
+  return (list(majors=ticksAt, minors=NULL))
 
 
 }
@@ -76,7 +76,7 @@ daily_ticks <- function(x, numIntervals = 3 ){
   ticks <- seq(minDate, maxDate, by = nice_step)
   majors <- fixTickClass(x, ticks)
   minors <- NULL
-  return (list(majors=as.vector(majors), minors=as.vector(minors)))
+  return (list(majors=majors, minors=minors))
 }
 
 
@@ -114,8 +114,9 @@ weekly_ticks <- function(x, numIntervals = 3, dayOfWeek=0 ){
   } else {
     minors = fixTickClass(x, seq(minDate, maxDate, by=7))
   }
+  rv <- list(majors=majors, minors=minors)
 
-  return (list(majors=as.vector(majors), minors=as.vector(minors)))
+  return (rv)
 }
 
 #' Calculate monthly tick marks
@@ -152,7 +153,7 @@ monthly_ticks <- function(x, numIntervals = 3){
 
   majors <- fixTickClass(x, ticks)
   minors <- NULL
-  return (list(majors=as.vector(majors), minors=as.vector(minors)))
+  return (list(majors=majors, minors=minors))
 }
 
 #' Calculate tick marks for a date axis
