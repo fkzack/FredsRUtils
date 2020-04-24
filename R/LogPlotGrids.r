@@ -1,6 +1,9 @@
 #An example of creating xyplots with grid aligned with tick marks
 #Works for log10 plots, date plots with "at" explicitly set in scales, and with ordinary plots
 
+#Since I did this I have found that I can do better wrapping xyPlot, see for example covidPlot
+#will probably replace this eventually
+
 
 #library(lattice)
 #library(latticeExtra)
@@ -8,6 +11,7 @@
 
 #rm(list=ls())
 
+#' Still used by addGrid, but will be replaced by function from ticks.r once I get around to it
 #' Calculate tick locations that will work nicely with log 10 grids
 #' returns a list of major tick locations and minor tick locations,
 #' $majors and $minors

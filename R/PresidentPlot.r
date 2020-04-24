@@ -1,3 +1,5 @@
+# color the background of a plot to show the party of the president in office at that time
+
 #library(lattice)
 #library(latticeExtra)
 #library(tidyverse)

@@ -191,7 +191,7 @@ fixTickClass <- function (x, ticks){
 }
 
 #' Calcualte ticks for one axis of a log plot
-#' x is the data to fit, in linear coordiantes
+#' x is the data to fit, in linear coordinates
 #' base is the log base to use, typically 2 or 10 or powers therof
 #' returns a list of
 #'    ticksAt (tick location in original coordinates),
@@ -267,7 +267,7 @@ testTicks <- function(){
   print(16^t$majors)
 
 }
-testTicks()
+#testTicks()
 
 
 
@@ -317,5 +317,5 @@ test <- function(){
 
 }
 
-
+#test()
 
