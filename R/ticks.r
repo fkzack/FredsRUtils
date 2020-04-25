@@ -235,7 +235,6 @@ log_ticks <- function(x, base=10){
     minors <- log(subcycle %o% base^minor_limits, base = base)
   } else if (base %% 4 == 0){
     #an even power of 4, so add minor grids between major grids
-
     start <- min(majors) + log2(base)/2
     minors <- seq(start, highest, by=log2(base))
   }
