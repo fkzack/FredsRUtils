@@ -216,25 +216,29 @@ log_ticks <- function(x, base=10){
   }
 
 
+
+
+  #generic calculations for all bases
+
   #majors are the log value of the major ticks
   majors <- seq(lowest, highest, step)
-  #cat("majors (actual plotted value):", majors, "\n")
-  #cat(base)
-  #cat(^majors (value as labeled on axis):", base^majors, "\n")
 
   #minor ticks can go outside data limits, but no further than next power
   lowest <- floor(min(log(x, base=base), na.rm = TRUE))
   highest <- ceiling(max(log(x, base=base), na.rm = TRUE))
   minor_limits <- seq(lowest, highest, step)
+  minors <- NULL
 
-  if (base%%10 ==0) {
+  #special cases for minor axes
+  if (base %% 10 ==0) {
     subcycle <-  seq(2*base/10, base-1, by=base/10)
     minors <- log(subcycle %o% base^minor_limits, base = base)
-  }
-  else {
-    minors <- NULL
-  }
+  } else if (base %% 4 == 0){
+    #an even power of 4, so add minor grids between major grids
 
+    start <- min(majors) + log2(base)/2
+    minors <- seq(start, highest, by=log2(base))
+  }
 
   return (list(majors=as.vector(majors), minors=as.vector(minors)))
 }
