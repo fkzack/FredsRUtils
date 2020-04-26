@@ -208,35 +208,49 @@ log_ticks <- function(x, base=10){
   x <- subset(x, x> 0)
 
   #locate major ticks as range of integer powers of base inside data limits
-  lowest <- ceiling(min(log(x, base=base), na.rm = TRUE))
-  highest <- floor(max(log(x, base=base), na.rm = TRUE))
-  if (highest - lowest < 1) {
-    highest = lowest + 1
-    lowest = lowest -1
+  lowestLogValue  <- min(log(x, base=base), na.rm = TRUE)
+  highestLogValue <- max(log(x, base=base), na.rm = TRUE)
+  lowestTick <- ceiling(lowestLogValue)
+  highestTick <- floor(highestLogValue)
+  if (highestTick - lowestTick < 1) {
+    #expand out slightly to include full range of datga
+    lowestTick <- floor(lowestLogValue)
+    lowerMargin <- abs(lowestLogValue - lowestTick)
+    highestTick <- ceiling(highestLogValue)
+    upperMargin <- abs(highestLogValue - highestTick)
+  }
+  if ((highestTick - lowestTick < 1) && (upperMargin < lowerMargin){
+
+
   }
 
 
 
-
-  #generic calculations for all bases
-
   #majors are the log value of the major ticks
-  majors <- seq(lowest, highest, step)
+  majors <- seq(lowestTick, highestTick, step)
 
   #minor ticks can go outside data limits, but no further than next power
-  lowest <- floor(min(log(x, base=base), na.rm = TRUE))
-  highest <- ceiling(max(log(x, base=base), na.rm = TRUE))
-  minor_limits <- seq(lowest, highest, step)
+  lowestTick <- floor(min(log(x, base=base), na.rm = TRUE))
+  highestTick <- ceiling(max(log(x, base=base), na.rm = TRUE))
+  minor_limits <- seq(lowestTick, highestTick, step)
   minors <- NULL
 
   #special cases for minor axes
   if (base %% 10 ==0) {
     subcycle <-  seq(2*base/10, base-1, by=base/10)
     minors <- log(subcycle %o% base^minor_limits, base = base)
-  } else if (base %% 4 == 0){
-    #an even power of 4, so add minor grids between major grids
-    start <- min(majors) + log2(base)/2
-    minors <- seq(start, highest, by=log2(base))
+  } else if (base %% 2 == 0 && base > 2){
+
+    #step minor grids in powers of 2
+    min_minor <- log2(base ^ min(majors))
+    max_minor <- log2(base ^ max(majors))
+    minors <- seq(min_minor,  max_minor)
+
+    #transform base from 2 to base
+    minors <- minors/log2(base)
+
+    #exclude overlaps
+    minors <- minors[-which(minors %in% majors)]
   }
 
   return (list(majors=as.vector(majors), minors=as.vector(minors)))
