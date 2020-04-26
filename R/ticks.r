@@ -207,31 +207,34 @@ log_ticks <- function(x, base=10){
   #we can't display 0 or negative, so ignore them when scaling
   x <- subset(x, x> 0)
 
-  #locate major ticks as range of integer powers of base inside data limits
+  # Locate major ticks as range of integer powers of base
+  #  Try to keep just inside data limits, but expand out if necessary to
+  #  get at least two ticks
   lowestLogValue  <- min(log(x, base=base), na.rm = TRUE)
   highestLogValue <- max(log(x, base=base), na.rm = TRUE)
   lowestTick <- ceiling(lowestLogValue)
   highestTick <- floor(highestLogValue)
   if (highestTick - lowestTick < 1) {
-    #expand out slightly to include full range of datga
+    #expand out slightly to include full range of data
     lowestTick <- floor(lowestLogValue)
     lowerMargin <- abs(lowestLogValue - lowestTick)
     highestTick <- ceiling(highestLogValue)
     upperMargin <- abs(highestLogValue - highestTick)
   }
-  if ((highestTick - lowestTick < 1) && (upperMargin < lowerMargin){
-
-
+  if ((highestTick - lowestTick < 1) && (upperMargin < lowerMargin)){
+    highestTick <- highestTick + 1
   }
-
+  if (highestTick - lowestTick < 1){
+    lowestTick <- lowestTick -1
+  }
 
 
   #majors are the log value of the major ticks
   majors <- seq(lowestTick, highestTick, step)
 
   #minor ticks can go outside data limits, but no further than next power
-  lowestTick <- floor(min(log(x, base=base), na.rm = TRUE))
-  highestTick <- ceiling(max(log(x, base=base), na.rm = TRUE))
+  lowestTick <- floor(lowestLogValue)
+  highestTick <- ceiling(highestLogValue)
   minor_limits <- seq(lowestTick, highestTick, step)
   minors <- NULL
 
@@ -282,6 +285,7 @@ testTicks <- function(){
   t <- log_ticks(x, base=16)
   print(t)
   print(16^t$majors)
+  print(16^t$minors)
 
 }
 #testTicks()
