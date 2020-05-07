@@ -242,10 +242,7 @@ log_ticks <- function(x, base=10){
   if (base %% 10 ==0) {
     subcycle <-  seq(2*base/10, base-1, by=base/10)
     minors <- log(subcycle %o% base^minor_limits, base = base)
-  } else if (base %% 2 == 0 && base > 2){
-
-
-
+  } else if (base %% 2 == 0){
     #step minor grids in powers of 2
     #min_minor <- log2(base ^ min(majors))
     #max_minor <- log2(base ^ max(majors))
