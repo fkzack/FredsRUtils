@@ -1,11 +1,11 @@
   # Wrappers around xyplot to print covid plots in my format
 
 library(devtools)
-install_github("fkzack/FredsRUtils", type="source")
-library(FredsRUtils)
+#install_github("fkzack/FredsRUtils", type="source")
+#library(FredsRUtils)
 library(lattice)
 library(latticeExtra)
-library(lubridate)        
+library(lubridate)
 
 
 
@@ -37,7 +37,7 @@ axisTicks <- function(x,logBase, numTickIntervals){
     minors <- t$minors
     ticksAt <- majors
     format <- "%Y-%m-%d"
-  } 
+  }
   else if (logBase!=FALSE){
     t <- log_ticks(x, base=logBase)
     minors <- t$minors
@@ -49,48 +49,48 @@ axisTicks <- function(x,logBase, numTickIntervals){
     majors <- t$majors
     minors <- t$minors
     ticksAt <- majors
-  } 
-  
+  }
+
   return(list(ticksAt=ticksAt, majors=majors, minors=minors, format=format))
 }
 
 
 #Plot covid data in my format
-#Parameters are same as for xyplot, except that 
+#Parameters are same as for xyplot, except that
 #   * I have not yet implemented subset as an argument
 #   * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
 #   * formatX, formatY are the format to apply to axis ticks
 #   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
-#    
-covidPlot <- function(formula1, data, groups=NULL,  
-                      logX = FALSE, logY = TRUE, 
+#
+covidPlot <- function(formula1, data, groups=NULL,
+                      logX = FALSE, logY = TRUE,
                       type = c('p', 'l'),
-                      subtitle = "", 
+                      subtitle = "",
                       xlab=NULL, numTickIntervalsX = 5, formatX=NULL,
                       ylab=NULL,  numTickIntervalsY=5, formatY=NULL,
                       allow.multiple = is.null(groups) || outer,
                       outer = !is.null(groups),
-                      drop.unused.levels = lattice.getOption("drop.unused.levels"), 
+                      drop.unused.levels = lattice.getOption("drop.unused.levels"),
                       ...){
-  
-  
+
+
   if (logX==TRUE){
     logX <- 10
   }
   if (logY==TRUE){3
     logY <- 10
   }
-  
-  
-  
+
+
+
   #get_all_vars gives every column used by the formula in its original form
   ## gav <- get_all_vars(formula1, data)
   ## print(gav)
-  
+
   # extract formula information using latticeParseFormula
   formula <- formula1
   groups <- eval(substitute(groups), data, environment(formula1))
-  lpf <- latticeParseFormula(formula, data=data, groups = groups, multiple = allow.multiple, 
+  lpf <- latticeParseFormula(formula, data=data, groups = groups, multiple = allow.multiple,
                              outer = outer,  subscripts = TRUE,
                              drop = drop.unused.levels)
   #print (lpf$left)
@@ -102,11 +102,11 @@ covidPlot <- function(formula1, data, groups=NULL,
   if(is.null(lpf$groups)){
     lpf$groups <- ""
   }
-  
+
   #should probably do something similar to groups handling above for subset, but I don't use the subset parameter so
   #have not yet tried to implement this
-  
-  
+
+
   df <- data.frame(lpf$right, lpf$left, unlist(lpf$condition, use.names = FALSE), lpf$groups)
   names(df) <- c('x', 'y', 'condition', 'groups')
   if (is.null(xlab)) {
@@ -115,13 +115,13 @@ covidPlot <- function(formula1, data, groups=NULL,
   if (is.null(ylab)) {
     ylab <- lpf$left.name
   }
-  
-  
+
+
 
 
   xTicks <-axisTicks(df$x, logX, numTickIntervalsX)
   yTicks <- axisTicks(df$y, logY, numTickIntervalsY)
-  
+
   if (is.null(formatX)){
     formatX <- xTicks$format
   }
@@ -135,7 +135,7 @@ covidPlot <- function(formula1, data, groups=NULL,
   } else {
     labelSize <- 1
   }
-  
+
   p <- xyplot(y~x | condition,  data = df, groups = groups,
               xTicks=xTicks, yTicks=yTicks,
               scales=list(
@@ -148,7 +148,7 @@ covidPlot <- function(formula1, data, groups=NULL,
               xlab = xlab,
               ylab=ylab,
               strip = strip.custom(par.strip.text = list(cex=labelSize)),
- 
+
               panel=function(x,y, subscripts,xTicks,  groups, yTicks, ...){
                 panel.abline(h=yTicks$majors, alpha=0.1)
                 panel.abline(h=yTicks$minors, alpha=0.05)
@@ -156,7 +156,7 @@ covidPlot <- function(formula1, data, groups=NULL,
                 panel.abline(v=xTicks$minors, alpha=0.05)
                 panel.xyplot(x,y,subscripts=subscripts,groups=groups, ...)
               },
-              
+
               ...)
   return (p)
 }
@@ -167,7 +167,7 @@ testCovidPlot <- function (){
   df$z <- 1:length(df$x) %% 5
   df$t <- seq(ISOdate(2020, 4,1,tz=""), by = "5 days", length.out = length(df$x))
   print(df)
-  p <- covidPlot(df$y~t, data=df, group=z, logY = 10, numTickIntervalsY = 10, 
+  p <- covidPlot(df$y~t, data=df, group=z, logY = 10, numTickIntervalsY = 10,
                  xlab = "x label", ylab = "y label")
   print(p)
   #xyplot(y~t, data=df, groups = z)
@@ -181,34 +181,34 @@ testCovidPlot <- function (){
 # df$group <- df$count %% 14
 # df$x <- 10^((df$count + df$group)/100)
 # p <- covidPlot(x~date | group, data=df)
-# 
+#
 # print(p)
 
 
 
 
-# Create a "symmetric log plot", with postive values on a log plot going up from zero, zero values at 0, 
+# Create a "symmetric log plot", with postive values on a log plot going up from zero, zero values at 0,
 # and negitive values as a plot of log of absolute error going down from zero
-# Parameters are same as for xyplot, except that 
+# Parameters are same as for xyplot, except that
 #   * I have not yet implemented subset as an argument
 #   * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
 #   * formatX, formatY are the format to apply to axis ticks
 #   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
 
 
-symmetricPlot <- function(formula1, data,   groups=NULL, 
-                          subtitle = "", numTickIntervals = 5, 
+symmetricPlot <- function(formula1, data,   groups=NULL,
+                          subtitle = "", numTickIntervals = 5,
                           xlab=NULL, numTickIntervalsX = 5, formatX=NULL,
                           ylab=NULL, formatY=NULL,
                           type = c('p', 'l'),
                           allow.multiple = is.null(groups) || outer,
                           outer = !is.null(groups),
-                          drop.unused.levels = lattice.getOption("drop.unused.levels"), 
+                          drop.unused.levels = lattice.getOption("drop.unused.levels"),
                           ...){
-  
+
   formula <- formula1
   groups <- eval(substitute(groups), data, environment(formula1))
-  lpf <- latticeParseFormula(formula, data=data, groups = groups, multiple = allow.multiple, 
+  lpf <- latticeParseFormula(formula, data=data, groups = groups, multiple = allow.multiple,
                              outer = outer,  subscripts = TRUE,
                              drop = drop.unused.levels)
   #print (lpf$left)
@@ -217,7 +217,7 @@ symmetricPlot <- function(formula1, data,   groups=NULL,
   if (is.null(lpf$condition)){
     lpf$condition <- ""
   }
-  
+
   df <- data.frame(lpf$right, lpf$left, unlist(lpf$condition, use.names = FALSE), lpf$groups)
   names(df) <- c('x', 'y', 'condition', 'groups')
   if (is.null(xlab)) {
@@ -226,60 +226,60 @@ symmetricPlot <- function(formula1, data,   groups=NULL,
   if (is.null(ylab)) {
     ylab <- lpf$left.name
   }
-  
+
   if (length(unique(unlist(lpf$condition))) > 100){
     labelSize <- 0.5
   } else {
     labelSize <- 1
   }
-  
-  
-  
+
+
+
   #scale values
   min_absolute <- min(ifelse(df$y==0, NA,abs(df$y)), na.rm = TRUE)
-  
-  #the center line we display around 
+
+  #the center line we display around
   log_origin = floor(log10(min_absolute))
-  
+
   min_y <- min(df$y, na.rm=TRUE)
   max_y <- max(df$y, na.rm=TRUE)
-  
-  
+
+
   #transform from y values to display values
   df$dv <- ifelse(df$y > 0, log10(df$y) - log_origin+1, NA)
   df$dv <- ifelse(df$y < 0 , -(log10(-df$y) - log_origin+1), df$dv)
   df$dv <- ifelse(df$y == 0 , 0, df$dv)
   #print(df)
-  
+
   #ticks as log value in original (_y) coordinates and in display value (_dv) coordianates
   negTicks_y  <- c()
   negTicks_dv <- c()
   posTicks_y  <- c()
   posTicks_dv <- c()
-  
+
   #tick locations at powers of ten in original coordinate system
   if (min_y < 0){
     negTicks_y <- seq(ceiling(log10(-min_y)), log_origin) #log of original coordinates
     negTicks_dv <- -negTicks_y +log_origin-1
   }
-  
+
   if (max_y > 0){
     posTicks_y <- seq(log_origin, ceiling(log10(max_y)))
     posTicks_dv <- posTicks_y - log_origin +1
   }
-  
+
   yTicks <- c(negTicks_dv, 0, posTicks_dv)
   #print("ticks:")
   #print (ticksAt)
   tickLabels <- c(-10^negTicks_y, 0,10^posTicks_y )
   #print(tickLabels)
-  
+
   #x axis
   xTicks <- date_ticks(df$x,numTickIntervals, 0)
- 
-  
+
+
   #print(str(df))
-  p <- xyplot(df$dv~df$x | df$condition, groups=groups, 
+  p <- xyplot(df$dv~df$x | df$condition, groups=groups,
               scales=list(y=list(at=yTicks, labels=tickLabels),
                           x=list(at=xTicks$majors,rot=45, format="%Y-%m-%d" )),
               xTicks=xTicks, yTicks=yTicks,
@@ -289,7 +289,7 @@ symmetricPlot <- function(formula1, data,   groups=NULL,
               type=type,
               as.table=TRUE,
               strip = strip.custom(par.strip.text = list(cex=labelSize)),
-              
+
               panel=function(x,y, subscripts,xTicks, yTicks, groups, ...){
                panel.abline(h = 0, col=rgb(0,0,0), alpha=0.1,  lwd=20)
                 panel.abline(h=yTicks, alpha=0.1)
@@ -297,13 +297,13 @@ symmetricPlot <- function(formula1, data,   groups=NULL,
                 panel.abline(v=xTicks$minors, alpha=0.05)
                 panel.xyplot(x,y,subscripts=subscripts, groups=groups, ...)
               },
-              
+
               ...)
   return(p)
 }
 
 testSymmetric <- function(){
-  
+
   df <- data.frame("y" = c(-10^seq(2,-3), 0, 10^seq(-3,2)))
   df$date <- seq(ISOdate(2020, 1,2), by="day", length.out=length(df$y))
   df$groupVar <- sprintf("group %d", 1:length(df$y) %%5)
@@ -311,7 +311,7 @@ testSymmetric <- function(){
   print (df)
   #p <- symmetricPlot(x~date | caseVar, groupVector = df$groupVar, data=df)
   p <- symmetricPlot(y~date | 1 , groups=groupVar, data=df)
-  
+
   print(p)
 }
 # testSymmetric()
