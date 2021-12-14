@@ -62,6 +62,7 @@ axisTicks <- function(x,logBase, numTickIntervals){
 #   * formatX, formatY are the format to apply to axis ticks
 #   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
 #
+#' @export
 covidPlot <- function(formula1, data, groups=NULL,
                       logX = FALSE, logY = TRUE,
                       type = c('p', 'l'),
@@ -194,8 +195,8 @@ testCovidPlot <- function (){
 #   * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
 #   * formatX, formatY are the format to apply to axis ticks
 #   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
-
-
+#
+#' @export
 symmetricPlot <- function(formula1, data,   groups=NULL,
                           subtitle = "", numTickIntervals = 5,
                           xlab=NULL, numTickIntervalsX = 5, formatX=NULL,
