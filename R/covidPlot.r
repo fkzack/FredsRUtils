@@ -55,13 +55,13 @@ axisTicks <- function(x,logBase, numTickIntervals){
 }
 
 
-#Plot covid data in my format
-#Parameters are same as for xyplot, except that
-#   * I have not yet implemented subset as an argument
-#   * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
-#   * formatX, formatY are the format to apply to axis ticks
-#   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
-#
+#' Plot covid data in my format
+#' Parameters are same as for xyplot, except that
+#'    * I have not yet implemented subset as an argument
+#'    * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
+#'    * formatX, formatY are the format to apply to axis ticks
+#'    * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
+#'
 #' @export
 covidPlot <- function(formula1, data, groups=NULL,
                       logX = FALSE, logY = TRUE,
@@ -188,14 +188,14 @@ testCovidPlot <- function (){
 
 
 
-# Create a "symmetric log plot", with postive values on a log plot going up from zero, zero values at 0,
-# and negitive values as a plot of log of absolute error going down from zero
-# Parameters are same as for xyplot, except that
-#   * I have not yet implemented subset as an argument
-#   * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
-#   * formatX, formatY are the format to apply to axis ticks
-#   * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
-#
+#'  Create a "symmetric log plot", with postive values on a log plot going up from zero, zero values at 0,
+#'  and negitive values as a plot of log of absolute error going down from zero
+#'  Parameters are same as for xyplot, except that
+#'    * I have not yet implemented subset as an argument
+#'    * logX, logY determine if the axis are log or not (FALSE = linear, True = Log10, N = LogN)
+#'    * formatX, formatY are the format to apply to axis ticks
+#'    * numTickIntervalsX, numTickIntervalsY are the approximate number of intervals between tick marks
+#'
 #' @export
 symmetricPlot <- function(formula1, data,   groups=NULL,
                           subtitle = "", numTickIntervals = 5,

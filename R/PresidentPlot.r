@@ -4,6 +4,7 @@
 #library(latticeExtra)
 #library(tidyverse)
 #source("R/Presidents.R")
+#' xyplot with presidential party shown by background
 #' @export
 PresidentPlot <- function(formula, data, inagurations = NULL, ...){
   if (is.null(inagurations)){
