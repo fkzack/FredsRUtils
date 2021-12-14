@@ -2,13 +2,15 @@
 % Please edit documentation in R/LogPlotGrids.r
 \name{log_ticks_old}
 \alias{log_ticks_old}
-\title{Calculate tick locations that will work nicely with log 10 grids
+\title{Still used by addGrid, but will be replaced by function from ticks.r once I get around to it
+Calculate tick locations that will work nicely with log 10 grids
 returns a list of major tick locations and minor tick locations,
 $majors and $minors}
 \usage{
 log_ticks_old(log_range)
 }
 \description{
+Still used by addGrid, but will be replaced by function from ticks.r once I get around to it
 Calculate tick locations that will work nicely with log 10 grids
 returns a list of major tick locations and minor tick locations,
 $majors and $minors
