@@ -5,3 +5,4 @@
 millCalibration.csv
 R/.DS_Store
 R/millTest.R
+secrets.json
